@@ -16,9 +16,9 @@ VALIDATE_ERROR=0
 for dir in $(echo "$@" | xargs -n1 dirname | sort -u | uniq); do
   echo "--> Running 'terraform validate' in directory '$dir'"
   pushd "$dir" >/dev/null
-  if [[ -e "0open.tofu" ]]; then TF="tofu"; else TF="terraform"; fi
-  $TF init -backend=false || VALIDATE_ERROR=$?
-  $TF validate || VALIDATE_ERROR=$?
+  [[ $(shopt -s nullglob; echo *.tofu) ]] && tf_bin=tofu || tf_bin=terraform
+  $tf_bin init -backend=false || VALIDATE_ERROR=$?
+  $tf_bin validate || VALIDATE_ERROR=$?
   popd >/dev/null
 done
 
