@@ -18,6 +18,7 @@ for dir in $(echo "$@" | xargs -n1 dirname | sort -u | uniq); do
   pushd "$dir" >/dev/null
   export TF_DATA_DIR=.terraform-validate
   [[ $(shopt -s nullglob; echo *.tofu) ]] && tf_bin=tofu || tf_bin=terraform
+  unset GIT_DIR GIT_INDEX_FILE
   $tf_bin init -backend=false || VALIDATE_ERROR=$?
   $tf_bin validate || VALIDATE_ERROR=$?
   popd >/dev/null
